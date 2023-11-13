@@ -36,12 +36,21 @@ class ServiceFilm:
         id - string
         modificator - string
         """
+        self.validator.validare_modificator(modificator)
         if optiune == 1:
             self.rep.modifica_titlu_film(id, modificator)
         elif optiune == 2:
             self.rep.modifica_gen_film(id, modificator)
         else:
             raise ValueError("Optiunea data nu este valida")
+
+    def afisare_lista_filme(self):
+        if self.rep.filme == {}:
+            raise ValueError("Lista de filme este goala!")
+        for i in self.rep.filme:
+            string = (str(self.rep.filme[i].get_id()) + " " + str(self.rep.filme[i].get_titlu()) + " "
+                      + str(self.rep.filme[i].get_gen()))
+            print(string)
 
 
 def test_add_film():

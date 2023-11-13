@@ -18,6 +18,11 @@ class ValidatorFilm:
         if len(erori) > 0:
             raise ValueError(erori)
 
+    @classmethod
+    def validare_modificator(cls, modificator):
+        if modificator == "":
+            raise ValueError("Noua valoare nu poate fi goala!")
+
 def test_validare_film():
     fl = Film("1", "", "Test")
     valid = ValidatorFilm()
@@ -34,5 +39,18 @@ def test_validare_film():
     except ValueError:
         assert False
 
+def test_validare_modificator():
+    valid = ValidatorFilm()
+    modificator = ""
+    try:
+        valid.validare_modificator(modificator)
+        assert False
+    except ValueError:
+        assert True
 
-test_validare_film()
+def teste_validator_film():
+    test_validare_film()
+    test_validare_modificator()
+
+
+teste_validator_film()

@@ -37,12 +37,21 @@ class ServiceClient:
         pentru optiune == 1 => se modifica numele clientului
         pentru optiune == 2 => se modifica prenumele clientului
         """
+        self.validator.validare_modificator(modificator)
         if optiune == 1:
             self.rep.modifica_nume_client(id, modificator)
         elif optiune == 2:
             self.rep.modifica_prenume_client(id, modificator)
         else:
             raise ValueError("Optiunea data nu este valida")
+
+    def afisare_lista_clienti(self):
+        if self.rep.clienti == {}:
+            raise ValueError("Lista de clienti este goala!")
+        for i in self.rep.clienti:
+            string = (str(self.rep.clienti[i].get_id()) + " " + str(self.rep.clienti[i].get_nume())
+                      + " " + str(self.rep.clienti[i].get_prenume()))
+            print(string)
 
 
 def test_add_client():

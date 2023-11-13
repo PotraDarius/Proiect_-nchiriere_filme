@@ -21,6 +21,11 @@ class ValidatorClient:
         if len(erori) > 0:
             raise ValueError(erori)
 
+    @classmethod
+    def validare_modificator(cls, modificator):
+        if modificator == "":
+            raise ValueError("Noua valoare nu poate fi goala!")
+
 def test_validare_client():
     cl = Client("", "Test", "Test")
     valid = ValidatorClient()
@@ -52,4 +57,18 @@ def test_validare_client():
         assert False
 
 
-test_validare_client()
+def test_validare_modificator():
+    valid = ValidatorClient()
+    modificator = ""
+    try:
+        valid.validare_modificator(modificator)
+        assert False
+    except ValueError:
+        assert True
+
+def teste_validator_client():
+    test_validare_client()
+    test_validare_modificator()
+
+
+teste_validator_client()
