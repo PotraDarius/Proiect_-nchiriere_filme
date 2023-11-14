@@ -14,18 +14,3 @@ class ValidatorUI:
             raise ValueError("Alegerea data nu este valida")
         else:
             return True
-
-
-def test_validare_optiune():
-    p = 5
-    validator = ValidatorUI()
-    assert validator.validare_optiune(p) is True
-    p = -3
-    try:
-        validator.validare_optiune(p)
-        assert False
-    except ValueError:
-        assert True
-
-
-test_validare_optiune()

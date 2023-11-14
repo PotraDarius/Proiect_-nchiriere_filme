@@ -1,13 +1,12 @@
 from Domain.film_module import Film
-from Validator.validator_film_module import ValidatorFilm
-from Repository.repository_film_module import RepositoryFilm
 
 class ServiceFilm:
     """
     Clasa care se ocupa cu cerintele date pe lista de filme
     """
-    def __init__(self, repo, validator):
+    def __init__(self, repo, repo_client, validator):
         self.rep = repo
+        self.rep_client = repo_client
         self.validator = validator
 
     def add_film(self, id, titlu, gen):
@@ -44,80 +43,75 @@ class ServiceFilm:
         else:
             raise ValueError("Optiunea data nu este valida")
 
+    def inchiriere_film(self, id, id_client):
+        """
+        Functie care se ocupa cu inchirierea unui film
+        raise ValueError daca nu exista film cu id-ul dat sau daca filmul este inchiriat deja
+                              nu exista un client cu id-ul dat
+        """
+        if id_client not in self.rep_client.clienti:
+            raise IndexError("Nu exista un client cu acest id!")
+        if id not in self.rep.filme:
+            raise IndexError("Nu exista un film cu acest id!")
+        if self.rep.filme[id].get_inchiriat() is True:
+            raise ValueError("Filmul este inchiriat deja!")
+        self.rep.filme[id].set_inchiriat(True)
+        self.rep.filme[id].creste_nr_inchirieri()
+        self.rep_client.clienti[id_client].creste_nr_filme_inchiriate()
+
+    def returnare_film(self, id):
+        """
+        Functie care se ocupa cu returnarea unui film
+        raise ValueError daca nu exista un film cu id-ul dat sau daca filmul nu este inchiriat
+        """
+        if id not in self.rep.filme:
+            raise IndexError("Nu exista un film cu acest id!")
+        if self.rep.filme[id].get_inchiriat() is False:
+            raise ValueError("Filmul nu este inchiriat!")
+        self.rep.filme[id].set_inchiriat(False)
+
+    def afisare_film(self, i):
+        return (str(self.rep.filme[i].get_id()) + " " + str(self.rep.filme[i].get_titlu()) + " "
+                      + str(self.rep.filme[i].get_gen()))
+
     def afisare_lista_filme(self):
         if self.rep.filme == {}:
             raise ValueError("Lista de filme este goala!")
         for i in self.rep.filme:
-            string = (str(self.rep.filme[i].get_id()) + " " + str(self.rep.filme[i].get_titlu()) + " "
-                      + str(self.rep.filme[i].get_gen()))
+            string = self.afisare_film(i)
             print(string)
 
+    @classmethod
+    def afisare_rezultat_cautare_filme(cls, dict):
+        for i in dict:
+            string = dict[i].get_id() + " " + dict[i].get_titlu() + " " + dict[i].get_gen()
+            print(string)
 
-def test_add_film():
-    rep = RepositoryFilm()
-    val = ValidatorFilm()
-    service = ServiceFilm(rep, val)
-    assert len(rep.filme) == 0
-    service.add_film("1", "Se7en", "Thriller")
-    assert len(rep.filme) == 1
-    try:
-        service.add_film("1", "Test", "Test")
-        assert False
-    except ValueError:
-        assert True
+    def cautare_filme_dupa_titlu(self, titlu):
+        dict = {}
+        for i in self.rep.filme:
+            if self.rep.filme[i].get_titlu() == titlu:
+                dict[i] = self.rep.filme[i]
+        return dict
 
-    try:
-        service.add_film("2", "", "Test")
-        assert False
-    except ValueError:
-        assert True
-    service.add_film("2", "The Zodiac", "Thriller")
-    assert len(rep.filme) == 2
+    def cautare_filme_dupa_gen(self, gen):
+        dict = {}
+        for i in self.rep.filme:
+            if self.rep.filme[i].get_gen() == gen:
+                dict[i] = self.rep.filme[i]
+        return dict
 
-def test_stergere_film():
-    rep = RepositoryFilm()
-    val = ValidatorFilm()
-    service = ServiceFilm(rep, val)
-    service.add_film("1", "Se7en", "Thriller")
-    service.add_film("2", "The Zodiac", "Thriller")
-    service.add_film("4", "Star Wars", "Science Fiction")
-    service.stergere_film("1")
-    assert len(rep.filme) == 2
-    try:
-        service.stergere_film("3")
-        assert False
-    except ValueError:
-        assert True
+    def cautare_filme_de_inchiriat(self):
+        dict = {}
+        for i in self.rep.filme:
+            if self.rep.filme[i].get_inchiriat() is False:
+                dict[i] = self.rep.filme[i]
+        return dict
 
+    def cautare_filme_inchiriate(self):
+        dict = {}
+        for i in self.rep.filme:
+            if self.rep.filme[i].get_inchiriat() is True:
+                dict[i] = self.rep.filme[i]
+        return dict
 
-def test_modifica_film():
-    rep = RepositoryFilm()
-    val = ValidatorFilm()
-    service = ServiceFilm(rep, val)
-    service.add_film("1", "Se7en", "Thriller")
-    service.add_film("2", "The Zodiac", "Thriller")
-    service.add_film("4", "Star Wars", "Science Fiction")
-    service.modifica_film(1, "1", "The Box")
-    assert rep.filme["1"].get_titlu() == "The Box"
-    service.modifica_film(2, "2", "Killer Documentary")
-    assert rep.filme["2"].get_gen() == "Killer Documentary"
-    try:
-        service.modifica_film(3, "2", "Test")
-        assert False
-    except ValueError:
-        assert True
-
-    try:
-        service.modifica_film(1, "3", "Test")
-        assert False
-    except ValueError:
-        assert True
-
-
-def teste_serice_filme():
-    test_add_film()
-    test_stergere_film()
-    test_modifica_film()
-
-
-teste_serice_filme()

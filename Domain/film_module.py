@@ -32,14 +32,14 @@ class Film:
     def set_gen(self, gen):
         self.__gen = gen
 
+    def get_inchiriat(self):
+        return self.__inchiriat
+
     def set_inchiriat(self, bool_value):
         self.__inchiriat = bool_value
 
-def test_creare_film():
-    fl = Film("1", "Se7en", "Thriller")
-    assert fl.get_id() == "1"
-    assert fl.get_titlu() == "Se7en"
-    assert fl.get_gen() == "Thriller"
+    def get_nr_inchirieri(self):
+        return self.__nr_inchirieri
 
-
-test_creare_film()
+    def creste_nr_inchirieri(self):
+        self.__nr_inchirieri += 1

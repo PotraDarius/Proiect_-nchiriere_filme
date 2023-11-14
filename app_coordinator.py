@@ -6,7 +6,7 @@ from Repository.repository_film_module import RepositoryFilm
 from Service.service_client_module import ServiceClient
 from Service.service_film_module import ServiceFilm
 from UI.UI_module import UI
-from Teste.teste_module import teste
+from Teste.teste_module import Tester
 
 # creare validatori
 validator_client = ValidatorClient()
@@ -19,10 +19,13 @@ repo_film = RepositoryFilm()
 
 # creare servicii
 sv_client = ServiceClient(repo_client, validator_client)
-sv_film = ServiceFilm(repo_film, validator_film)
+sv_film = ServiceFilm(repo_film, repo_client, validator_film)
 
 # creare UI
 ui = UI(sv_client, sv_film, validator_UI)
 
-teste()
+# rulare teste
+tester = Tester()
+tester.ruleaza_teste()
+
 ui.meniu_principal()

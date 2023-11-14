@@ -10,7 +10,7 @@ class Client:
         self.__id = id
         self.__nume = nume
         self.__prenume = prenume
-        self.__lista_filme_inchiriate = []
+        self.__numar_filme_inchiriate = 0
 
     def get_id(self):
         return self.__id
@@ -27,12 +27,8 @@ class Client:
     def set_prenume(self, prenume):
         self.__prenume = prenume
 
+    def get_nr_filme_inchiriate(self):
+        return self.__numar_filme_inchiriate
 
-def test_creare_client():
-    cl = Client("1", "Potra", "Darius")
-    assert cl.get_id() == "1"
-    assert cl.get_nume() == "Potra"
-    assert cl.get_prenume() == "Darius"
-
-
-test_creare_client()
+    def creste_nr_filme_inchiriate(self):
+        self.__numar_filme_inchiriate += 1

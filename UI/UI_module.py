@@ -11,9 +11,10 @@ class UI:
         self.UI_client = 0
         self.UI_film = 0
 
-    @staticmethod
-    def alegere_optiune():
-        return input("Dati o optiune: ")
+    def alegere_optiune(self):
+        p = input("Dati o optiune: ")
+        self.validator.validare_optiune(p)
+        return int(p)
 
     def meniu_adaugare(self):
         while True:
@@ -21,8 +22,6 @@ class UI:
             print("2.Adauga film")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
             if p == 1:
                 id = input("Dati id-ul: ")
                 nume = input("Dati numele: ")
@@ -44,8 +43,6 @@ class UI:
             print("2.Sterge film")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
             if p == 1:
                 id = input("Dati id-ul: ")
                 self.service_client.stergere_client(id)
@@ -63,8 +60,6 @@ class UI:
             print("2.Modificare prenume")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
             id = input("Dati id-ul clientului: ")
             if p == 1:
                 nume = input("Dati noua valoare a numelui: ")
@@ -83,8 +78,6 @@ class UI:
             print("2.Modificare gen")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
             id = input("Dati id-ul filmului: ")
             if p == 1:
                 titlu = input("Dati noua valoare a titlului: ")
@@ -103,14 +96,83 @@ class UI:
             print("2.Modificare film")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
             if p == 1:
                 self.meniu_modificare_client()
             elif p == 2:
                 self.meniu_modificare_film()
             elif p == 3:
                 pass
+
+    def meniu_cautare_clienti(self):
+        while True:
+            print("1.Cautare clienti dupa nume")
+            print("2.Cautare clienti dupa prenume")
+            print("3.Inapoi")
+            p = self.alegere_optiune()
+            if p == 1:
+                nume = input("Dati numele dupa care vreti sa cautati clienti: ")
+                dict = self.service_client.cautare_clienti_dupa_nume(nume)
+                if dict == {}:
+                    print("Nu s-a gasit niciun client cu acest nume!")
+                else:
+                    self.service_client.afisare_rezultat_cautare_clienti(dict)
+            elif p == 2:
+                prenume = input("Dati prenumele dupa care vreti sa cautati clienti: ")
+                dict = self.service_client.cautare_clienti_dupa_prenume(prenume)
+                if dict == {}:
+                    print("Nu s-a gasit niciun client cu acest prenume!")
+                else:
+                    self.service_client.afisare_rezultat_cautare_clienti(dict)
+            elif p == 3:
+                break
+
+    def meniu_cautare_filme(self):
+        while True:
+            print("1.Cautare dupa titlu")
+            print("2.Cautare dupa gen")
+            print("3.Cautare dupa filme de inchiriat")
+            print("4.Cautare dupa filme inchiriate")
+            print("5.Inapoi")
+            p = self.alegere_optiune()
+            if p == 1:
+                titlu = input("Dati titlul dupa care vreti sa cautati filme: ")
+                dict = self.service_film.cautare_filme_dupa_titlu(titlu)
+                if dict == {}:
+                    print("Nu s-a gasit un film cu titlul dat!")
+                else:
+                    self.service_film.afisare_rezultat_cautare_filme(dict)
+            elif p == 2:
+                gen = input("Dati genul dupa care vreti sa cautati filme: ")
+                dict = self.service_film.cautare_filme_dupa_gen(gen)
+                if dict == {}:
+                    print("Nu s-a gasit un film cu genul dat!")
+                else:
+                    self.service_film.afisare_rezultat_cautare_filme(dict)
+            elif p == 3:
+                dict = self.service_film.cautare_filme_de_inchiriat()
+                if dict == {}:
+                    print("Toate filmele sunt inchiriate!")
+                else:
+                    self.service_film.afisare_rezultat_cautare_filme(dict)
+            elif p == 4:
+                dict = self.service_film.cautare_filme_inchiriate()
+                if dict == {}:
+                    print("Nu exista film ce este inchiriat!")
+                else:
+                    self.service_film.afisare_rezultat_cautare_filme(dict)
+            elif p == 5:
+                break
+
+    def meniu_inchiriere(self):
+        id_client = input("Dati id-ul clientului ce va inchiria filmul: ")
+        id = input("Dati id-ul filmului ce doriti sa il inchiriati: ")
+        self.service_film.inchiriere_film(id, id_client)
+        print("Inchiriere reusita!")
+
+    def meniu_returnare(self):
+        id = input("Dati id-ul filmului ce doriti sa il returnati: ")
+        self.service_film.returnare_film(id)
+        print("Returnare reusita!")
 
     def meniu_principal(self):
         while True:
@@ -120,10 +182,13 @@ class UI:
             print("3.Modifica film/client")
             print("4.Afisare lista clienti")
             print("5.Afisare lista filme")
-            print("6.Iesire")
+            print("6.Cautare clienti")
+            print("7.Cautare filme")
+            print("8.Inchiriere film")
+            print("9.Returnare film")
+            print("10.Iesire")
             p = self.alegere_optiune()
-            self.validator.validare_optiune(p)
-            p = int(p)
+
             if p == 1:
                 self.meniu_adaugare()
             elif p == 2:
@@ -135,4 +200,12 @@ class UI:
             elif p == 5:
                 self.service_film.afisare_lista_filme()
             elif p == 6:
+                self.meniu_cautare_clienti()
+            elif p == 7:
+                self.meniu_cautare_filme()
+            elif p == 8:
+                self.meniu_inchiriere()
+            elif p == 9:
+                self.meniu_returnare()
+            elif p == 10:
                 break
