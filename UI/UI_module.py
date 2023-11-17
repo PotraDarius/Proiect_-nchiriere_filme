@@ -60,12 +60,13 @@ class UI:
             print("2.Modificare prenume")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            id = input("Dati id-ul clientului: ")
             if p == 1:
+                id = input("Dati id-ul clientului: ")
                 nume = input("Dati noua valoare a numelui: ")
                 self.service_client.modificare_client(p, id, nume)
                 print("Modificare reusita!")
             elif p == 2:
+                id = input("Dati id-ul clientului: ")
                 prenume = input("Dati noua valoare a prenumelui: ")
                 self.service_client.modificare_client(p, id, prenume)
                 print("Modificare reusita!")
@@ -78,14 +79,15 @@ class UI:
             print("2.Modificare gen")
             print("3.Inapoi")
             p = self.alegere_optiune()
-            id = input("Dati id-ul filmului: ")
             if p == 1:
+                id = input("Dati id-ul filmului: ")
                 titlu = input("Dati noua valoare a titlului: ")
-                self.service_film.modificare_film(p, id, titlu)
+                self.service_film.modifica_film(p, id, titlu)
                 print("Modificare reusita!")
             elif p == 2:
+                id = input("Dati id-ul filmului: ")
                 gen = input("Dati noua valoare a genului: ")
-                self.service_film.modificare_film(p, id, gen)
+                self.service_film.modifica_film(p, id, gen)
                 print("Modificare reusita!")
             elif p == 3:
                 break
@@ -101,7 +103,7 @@ class UI:
             elif p == 2:
                 self.meniu_modificare_film()
             elif p == 3:
-                pass
+                break
 
     def meniu_cautare_clienti(self):
         while True:
@@ -174,6 +176,36 @@ class UI:
         self.service_film.returnare_film(id)
         print("Returnare reusita!")
 
+    def meniu_rapoarte(self):
+        while True:
+            print("1.Afisare clienti cu filme inchiriate ordonati dupa nume")
+            print("2.Afisare clienti cu filme inchiriate ordonati dupa numarul de filme inchiriate")
+            print("3.Afisare cele mai inchiriate filme")
+            print("4.Afisare primii 30% clienti cu cele mai multe filme inchiriate")
+            print("5.Inapoi")
+            p = self.alegere_optiune()
+            if p == 1:
+                dict = self.service_client.ordonare_clienti_dupa_nume()
+                if dict == {}:
+                    print("Lista de clienti este goala!")
+                else:
+                    self.service_client.afisare_rezultat_rapoarte_clienti(dict)
+            elif p == 2:
+                dict = self.service_client.ordonare_clienti_dupa_nr_filme_inchiriate()
+                if dict == {}:
+                    print("Lista de clienti este goala!")
+                else:
+                    self.service_client.afisare_rezultat_rapoarte_clienti(dict)
+            elif p == 3:
+                dict = self.service_film.cele_mai_inchiriate_filme()
+                if dict == {}:
+                    print("Lista de filme este goala!")
+                self.service_film.afisare_cele_mai_inchiriate_filme(dict)
+            elif p == 4:
+                pass
+            elif p == 5:
+                break
+
     def meniu_principal(self):
         while True:
             print("Meniul aplicatiei")
@@ -186,7 +218,8 @@ class UI:
             print("7.Cautare filme")
             print("8.Inchiriere film")
             print("9.Returnare film")
-            print("10.Iesire")
+            print("10.Rapoarte")
+            print("11.Iesire")
             p = self.alegere_optiune()
 
             if p == 1:
@@ -208,4 +241,6 @@ class UI:
             elif p == 9:
                 self.meniu_returnare()
             elif p == 10:
+                self.meniu_rapoarte()
+            elif p == 11:
                 break

@@ -19,5 +19,10 @@ class ValidatorFilm:
 
     @classmethod
     def validare_modificator(cls, modificator):
+        """
+        Valideaza un string dat ce va modifica un film
+        :param modificator:
+        :raise ValueError daca modificator este gol
+        """
         if modificator == "":
             raise ValueError("Noua valoare nu poate fi goala!")

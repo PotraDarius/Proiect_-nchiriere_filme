@@ -1,6 +1,9 @@
 from Repository.repository_client_module import RepositoryClient
 from Validator.validator_client_module import ValidatorClient
 from Service.service_client_module import ServiceClient
+from Repository.repository_film_module import RepositoryFilm
+from Validator.validator_film_module import ValidatorFilm
+from Service.service_film_module import ServiceFilm
 
 class TesterServiceClient:
     """
@@ -91,9 +94,36 @@ class TesterServiceClient:
         dict = service.cautare_clienti_dupa_prenume("Darius")
         assert list(dict.keys()) == ['1', '4']
 
+    @staticmethod
+    def test_ordonare_clienti_dupa_nume():
+        rep = RepositoryClient()
+        val = ValidatorClient()
+        service = ServiceClient(rep, val)
+        service.add_client("1", "Potra", "Darius")
+        service.add_client("2", "Bucur", "Victor")
+        dict = service.ordonare_clienti_dupa_nume()
+        assert list(dict.keys()) == ['2', '1']
+
+    @staticmethod
+    def test_ordonare_clienti_dupa_nr_filme_inchiriate():
+        rep = RepositoryClient()
+        val = ValidatorClient()
+        service = ServiceClient(rep, val)
+        rep_fl = RepositoryFilm()
+        val_fl = ValidatorFilm()
+        service_fl = ServiceFilm(rep_fl, rep,  val_fl)
+        service.add_client("1", "Potra", "Darius")
+        service.add_client("2", "Bucur", "Victor")
+        service_fl.add_film("1", "Seyen", "Thriller")
+        service_fl.inchiriere_film("1", "2")
+        dict = service.ordonare_clienti_dupa_nr_filme_inchiriate()
+        assert list(dict.keys()) == ['2', '1']
+
     def teste_service_client(self):
         self.test_add_client()
         self.test_stergere_client()
         self.test_modificare_client()
         self.test_cautare_clienti_dupa_nume()
         self.test_cautare_clienti_dupa_prenume()
+        self.test_ordonare_clienti_dupa_nume()
+        self.test_ordonare_clienti_dupa_nr_filme_inchiriate()

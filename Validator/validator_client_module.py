@@ -23,5 +23,10 @@ class ValidatorClient:
 
     @classmethod
     def validare_modificator(cls, modificator):
+        """
+        Validare un string folosit pentru modificarea unui client
+        :param modificator:
+        :raise Value Error daca modificator este gol
+        """
         if modificator == "":
             raise ValueError("Noua valoare nu poate fi goala!")

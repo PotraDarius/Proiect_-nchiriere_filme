@@ -30,5 +30,8 @@ class Client:
     def get_nr_filme_inchiriate(self):
         return self.__numar_filme_inchiriate
 
+    def set_nr_filme_inchiriate(self, nr):
+        self.__numar_filme_inchiriate = nr
+
     def creste_nr_filme_inchiriate(self):
         self.__numar_filme_inchiriate += 1

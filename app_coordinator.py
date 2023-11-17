@@ -28,4 +28,10 @@ ui = UI(sv_client, sv_film, validator_UI)
 tester = Tester()
 tester.ruleaza_teste()
 
+sv_client.load_from_file_to_repository_client()
+sv_film.load_from_file_to_repository_film()
+
 ui.meniu_principal()
+
+sv_client.load_from_repository_client_to_file()
+sv_film.load_from_repository_film_to_file()

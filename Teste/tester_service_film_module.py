@@ -161,6 +161,22 @@ class TesterServiceFilm:
         dict = service.cautare_filme_inchiriate()
         assert list(dict.keys()) == ['2']
 
+    @staticmethod
+    def test_cele_mai_inchiriate_filme():
+        rep = RepositoryFilm()
+        rep_client = RepositoryClient()
+        valid = ValidatorFilm()
+        service = ServiceFilm(rep, rep_client, valid)
+        rep_client.store_client(Client("1", "Potra", "Darius"))
+        rep_client.store_client(Client("2", "Bucur", "Victor"))
+        service.add_film("1", "Se7en", "Thriller")
+        service.add_film("2", "The Zodiac", "Thriller")
+        service.add_film("3", "Star Wars", "Science Fiction")
+        service.inchiriere_film("1", "1")
+        service.inchiriere_film("2", "2")
+        dict = service.cele_mai_inchiriate_filme()
+        assert list(dict.keys()) == ['1', '2']
+
     def teste_serice_filme(self):
         self.test_add_film()
         self.test_stergere_film()
@@ -171,3 +187,4 @@ class TesterServiceFilm:
         self.test_cautare_filme_dupa_gen()
         self.test_cautare_filme_de_inchiriat()
         self.test_cautare_filme_inchiriate()
+        self.test_cele_mai_inchiriate_filme()

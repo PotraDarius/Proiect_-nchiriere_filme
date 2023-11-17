@@ -38,6 +38,9 @@ class Film:
     def set_inchiriat(self, bool_value):
         self.__inchiriat = bool_value
 
+    def set_nr_inchirieri(self, nr):
+        self.__nr_inchirieri = nr
+
     def get_nr_inchirieri(self):
         return self.__nr_inchirieri
 
