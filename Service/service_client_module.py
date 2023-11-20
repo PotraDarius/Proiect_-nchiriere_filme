@@ -1,4 +1,6 @@
 from Domain.client_module import Client
+import random
+import string
 class ServiceClient:
     """
     Clasa care se ocupa cu cerintele date pe lista de clienti
@@ -18,7 +20,7 @@ class ServiceClient:
         if string == "":
             raise ValueError("Nu se poate forma un client!")
         string_despartit = string.split('-')
-        id = string_despartit[0]
+        id = int(string_despartit[0])
         nume = string_despartit[1]
         prenume = string_despartit[2]
         nr_fl_inchiriate = int(string_despartit[3])
@@ -47,7 +49,7 @@ class ServiceClient:
         :param i: dict.key
         :return: string
         """
-        return (self.rep.clienti[i].get_id() + "-" + self.rep.clienti[i].get_nume()
+        return (str(self.rep.clienti[i].get_id()) + "-" + self.rep.clienti[i].get_nume()
                 + "-" + self.rep.clienti[i].get_prenume()
                 + "-" + str(self.rep.clienti[i].get_nr_filme_inchiriate()))
 
@@ -105,7 +107,7 @@ class ServiceClient:
         :param i:
         :return: string
         """
-        return (self.rep.clienti[i].get_id() + " " + self.rep.clienti[i].get_nume()
+        return (str(self.rep.clienti[i].get_id()) + " " + self.rep.clienti[i].get_nume()
                 + " " + self.rep.clienti[i].get_prenume()
                 + " Nr filme inchiriate: " + str(self.rep.clienti[i].get_nr_filme_inchiriate()))
 
@@ -128,7 +130,7 @@ class ServiceClient:
         :return:
         """
         for i in dict:
-            string = (dict[i].get_id() + " " + dict[i].get_nume() + " " + dict[i].get_prenume()
+            string = (str(dict[i].get_id()) + " " + dict[i].get_nume() + " " + dict[i].get_prenume()
                       + " Nr filme inchiriare: " + str(dict[i].get_nr_filme_inchiriate()))
             print(string)
 
@@ -164,7 +166,7 @@ class ServiceClient:
         :return:
         """
         for i in dict:
-            string = (dict[i].get_id() + " " + dict[i].get_nume() + " " + dict[i].get_prenume()
+            string = (str(dict[i].get_id()) + " " + dict[i].get_nume() + " " + dict[i].get_prenume()
                       + " Nr filme inchiriare: " + str(dict[i].get_nr_filme_inchiriate()))
             print(string)
 
@@ -185,3 +187,21 @@ class ServiceClient:
         ordonate = sorted(self.rep.clienti.items(), key=lambda x: x[1].get_nr_filme_inchiriate(), reverse=True)
         ordonate_dict = {k: v for k, v in ordonate}
         return ordonate_dict
+
+    def generare_random_clienti(self, x):
+        for i in range(0, x):
+            id = int(''.join(random.choices(string.digits, k=2)))
+            titlu = ''.join(random.choices(string.ascii_letters, k=10))
+            gen = ''.join(random.choices(string.ascii_letters, k=7))
+            print(str(id) + " " + " " + titlu + " " + gen)
+            self.add_client(id, titlu, gen)
+
+    def primii_30lasuta_clienti_cu_filme_inchiriate(self):
+        ordonate = self.ordonare_clienti_dupa_nr_filme_inchiriate()
+        primii_30lasuta = round((30*len(ordonate))/100)
+        primii_30lasuta_dict = {}
+        for i in ordonate and primii_30lasuta > 0:
+            primii_30lasuta_dict[i] = ordonate[i]
+            primii_30lasuta -= 1
+        return primii_30lasuta_dict
+

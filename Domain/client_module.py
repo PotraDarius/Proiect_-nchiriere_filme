@@ -13,7 +13,7 @@ class Client:
         self.__numar_filme_inchiriate = 0
 
     def get_id(self):
-        return self.__id
+        return int(self.__id)
 
     def get_nume(self):
         return self.__nume

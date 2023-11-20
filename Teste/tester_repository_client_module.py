@@ -32,10 +32,10 @@ class TesterRepoClient:
         cl = Client("2", "Test", "Test")
         rep.store_client(cl)
         assert len(rep.clienti) == 2
-        rep.delete_client("1")
+        rep.delete_client(1)
         assert len(rep.clienti) == 1
         try:
-            rep.delete_client("3")
+            rep.delete_client(3)
             assert False
         except ValueError:
             assert True

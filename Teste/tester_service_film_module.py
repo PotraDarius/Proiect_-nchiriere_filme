@@ -82,12 +82,12 @@ class TesterServiceFilm:
         rep_client.store_client(Client("1", "Potra", "Darius"))
         service.add_film("1", "Se7en", "Thriller")
         service.add_film("2", "The Zodiac", "Thriller")
-        service.inchiriere_film("1", "1")
+        service.inchiriere_film("1", 1)
         assert rep.filme["1"].get_inchiriat() is True
         assert rep.filme["1"].get_nr_inchirieri() == 1
-        assert rep_client.clienti["1"].get_nr_filme_inchiriate() == 1
+        assert rep_client.clienti[1].get_nr_filme_inchiriate() == 1
         try:
-            service.inchiriere_film("1", "1")
+            service.inchiriere_film("1", 1)
             assert False
         except ValueError:
             assert True
@@ -101,7 +101,7 @@ class TesterServiceFilm:
         rep_client.store_client(Client("1", "Potra", "Darius"))
         service.add_film("1", "Se7en", "Thriller")
         service.add_film("2", "The Zodiac", "Thriller")
-        service.inchiriere_film("1", "1")
+        service.inchiriere_film("1", 1)
         assert rep.filme["1"].get_inchiriat() is True
         service.returnare_film("1")
         assert rep.filme["1"].get_inchiriat() is False
@@ -143,7 +143,7 @@ class TesterServiceFilm:
         service.add_film("1", "Se7en", "Thriller")
         service.add_film("2", "The Zodiac", "Thriller")
         service.add_film("3", "Star Wars", "Science Fiction")
-        service.inchiriere_film("2", "1")
+        service.inchiriere_film("2", 1)
         dict = service.cautare_filme_de_inchiriat()
         assert list(dict.keys()) == ['1', '3']
 
@@ -157,7 +157,7 @@ class TesterServiceFilm:
         service.add_film("1", "Se7en", "Thriller")
         service.add_film("2", "The Zodiac", "Thriller")
         service.add_film("3", "Star Wars", "Science Fiction")
-        service.inchiriere_film("2", "1")
+        service.inchiriere_film("2", 1)
         dict = service.cautare_filme_inchiriate()
         assert list(dict.keys()) == ['2']
 
@@ -172,10 +172,19 @@ class TesterServiceFilm:
         service.add_film("1", "Se7en", "Thriller")
         service.add_film("2", "The Zodiac", "Thriller")
         service.add_film("3", "Star Wars", "Science Fiction")
-        service.inchiriere_film("1", "1")
-        service.inchiriere_film("2", "2")
+        service.inchiriere_film("1", 1)
+        service.inchiriere_film("2", 2)
         dict = service.cele_mai_inchiriate_filme()
         assert list(dict.keys()) == ['1', '2']
+
+    @staticmethod
+    def test_generare_filme_random():
+        rep = RepositoryFilm()
+        rep_cl = RepositoryClient()
+        valid = ValidatorFilm()
+        service = ServiceFilm(rep, rep_cl, valid)
+        service.generare_random_filme(3)
+        assert len(rep.filme) == 3
 
     def teste_serice_filme(self):
         self.test_add_film()
@@ -188,3 +197,4 @@ class TesterServiceFilm:
         self.test_cautare_filme_de_inchiriat()
         self.test_cautare_filme_inchiriate()
         self.test_cele_mai_inchiriate_filme()
+        self.test_generare_filme_random()

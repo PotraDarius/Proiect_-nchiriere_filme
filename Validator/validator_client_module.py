@@ -12,8 +12,8 @@ class ValidatorClient:
             if: id, nume sau prenume gol
         """
         erori = ""
-        if cl.get_id() == "":
-            erori += "Id-ul nu poate fi gol!"
+        if cl.get_id() <= 0:
+            erori += "Id-ul nu poate fi negativ!"
         if cl.get_nume() == "":
             erori += "Numele nu poate fi gol!"
         if cl.get_prenume() == "":

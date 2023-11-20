@@ -1,4 +1,6 @@
 from Domain.film_module import Film
+import random
+import string
 
 
 class ServiceFilm:
@@ -240,3 +242,11 @@ class ServiceFilm:
                 dict[i] = self.rep.filme[i]
 
         return dict
+
+    def generare_random_filme(self, x):
+        for i in range(0, x):
+            id = ''.join(random.choices(string.digits, k=2))
+            titlu = ''.join(random.choices(string.ascii_letters, k=10))
+            gen = ''.join(random.choices(string.ascii_letters, k=7))
+            print(id + " " + " " + titlu + " " + gen)
+            self.add_film(id, titlu, gen)

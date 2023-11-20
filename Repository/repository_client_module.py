@@ -23,6 +23,7 @@ class RepositoryClient:
         self.clienti[cl.get_id()] = cl
 
     def validare_id(self, id):
+        id = int(id)
         if id not in self.clienti.keys():
             raise ValueError("Nu exista un client cu id-ul dat")
 
