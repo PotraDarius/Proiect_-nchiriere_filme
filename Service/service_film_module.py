@@ -21,8 +21,6 @@ class ServiceFilm:
         :return: fl - Film()
         :raise: ValueError daca string este gol
         """
-        if string == "":
-            raise ValueError("Nu se poate crea un film!")
         string_despartit = string.split('-')
         id = string_despartit[0]
         titlu = string_despartit[1]
@@ -47,6 +45,8 @@ class ServiceFilm:
         file = open(file_path, "r")
         for line in file:
             line = line.rstrip('\n')
+            if line == "":
+                continue
             cl = self.creare_din_fisier_film(line)
             if self.validator is not None:
                 self.validator.validare_film(cl)

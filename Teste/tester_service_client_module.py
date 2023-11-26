@@ -136,11 +136,16 @@ class TesterServiceClient:
         service.add_client(1, "Potra", "Darius")
         rep.clienti[1].set_nr_filme_inchiriate(4)
         service.add_client(2, "Bucur", "Victor")
-        rep.clienti[1].set_nr_filme_inchiriate(3)
+        rep.clienti[2].set_nr_filme_inchiriate(3)
         service.add_client(3, "Bucur", "Felix")
-        rep.clienti[1].set_nr_filme_inchiriate(6)
-        service.add_client(4, "Potra", "Darius")
-        rep.clienti[1].set_nr_filme_inchiriate(7)
+        rep.clienti[3].set_nr_filme_inchiriate(6)
+        service.add_client(4, "Timbus", "Flaviu")
+        rep.clienti[4].set_nr_filme_inchiriate(7)
+        assert len(rep.clienti) == 4
+        dict = service.ordonare_clienti_dupa_nr_filme_inchiriate()
+        assert list(dict.keys()) == [4, 3, 1, 2]
+        treizeci = service.primii_30lasuta_clienti_cu_filme_inchiriate()
+        assert list(treizeci.keys()) == [4]
 
     def teste_service_client(self):
         self.test_add_client()
@@ -151,3 +156,4 @@ class TesterServiceClient:
         self.test_ordonare_clienti_dupa_nume()
         self.test_ordonare_clienti_dupa_nr_filme_inchiriate()
         self.test_generare_clienti_random()
+        self.test_primii_30lasuta_clienti()

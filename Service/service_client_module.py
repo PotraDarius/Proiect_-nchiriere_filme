@@ -15,10 +15,7 @@ class ServiceClient:
         Creeaza un client dintr-un string dat
         :param string:
         :return: cl: Client
-        :raise: ValueError daca string este gol
         """
-        if string == "":
-            raise ValueError("Nu se poate forma un client!")
         string_despartit = string.split('-')
         id = int(string_despartit[0])
         nume = string_despartit[1]
@@ -37,6 +34,8 @@ class ServiceClient:
         file = open(file_path, "r")
         for line in file:
             line = line.rstrip('\n')
+            if line == "":
+                continue
             cl = self.creare_din_string_client(line)
             if self.validator is not None:
                 self.validator.validare_client(cl)
@@ -198,10 +197,13 @@ class ServiceClient:
 
     def primii_30lasuta_clienti_cu_filme_inchiriate(self):
         ordonate = self.ordonare_clienti_dupa_nr_filme_inchiriate()
-        primii_30lasuta = round((30*len(ordonate))/100)
+        primii_30lasuta = int((30*len(ordonate))/100)
         primii_30lasuta_dict = {}
-        for i in ordonate and primii_30lasuta > 0:
-            primii_30lasuta_dict[i] = ordonate[i]
-            primii_30lasuta -= 1
+        if primii_30lasuta == 0:
+            primii_30lasuta = 1
+        for i in ordonate:
+            if primii_30lasuta > 0:
+                primii_30lasuta_dict[i] = ordonate[i]
+                primii_30lasuta -= 1
         return primii_30lasuta_dict
 
