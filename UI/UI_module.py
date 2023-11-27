@@ -181,7 +181,8 @@ class UI:
             print("2.Afisare clienti cu filme inchiriate ordonati dupa numarul de filme inchiriate")
             print("3.Afisare cele mai inchiriate filme")
             print("4.Afisare primii 30% clienti cu cele mai multe filme inchiriate")
-            print("5.Inapoi")
+            print("5.Afisare filme ordonate dupa numarul de inchirieri")
+            print("6.Inapoi")
             p = self.alegere_optiune()
             if p == 1:
                 dict = self.service_client.ordonare_clienti_dupa_nume()
@@ -199,13 +200,18 @@ class UI:
                 dict = self.service_film.cele_mai_inchiriate_filme()
                 if dict == {}:
                     print("Lista de filme este goala!")
-                self.service_film.afisare_cele_mai_inchiriate_filme(dict)
+                self.service_film.afisare_rapoarte_filme(dict)
             elif p == 4:
                 dict = self.service_client.primii_30lasuta_clienti_cu_filme_inchiriate()
                 if dict == {}:
                     print("Lista de filme este goala!")
                 self.service_client.afisare_rezultat_rapoarte_clienti(dict)
             elif p == 5:
+                dict = self.service_film.ordonare_filme_dupa_nr_inchirieri()
+                if dict == {}:
+                    print("Lista de filme este goala!")
+                self.service_film.afisare_rapoarte_filme(dict)
+            elif p == 6:
                 break
 
     def meniu_generare_random(self):

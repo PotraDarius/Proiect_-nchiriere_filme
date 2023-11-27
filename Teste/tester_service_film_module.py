@@ -186,6 +186,26 @@ class TesterServiceFilm:
         service.generare_random_filme(3)
         assert len(rep.filme) == 3
 
+    @staticmethod
+    def test_ordonare_filme_dupa_nr_inchirieri():
+        rep = RepositoryFilm()
+        rep_cl = RepositoryClient()
+        valid = ValidatorFilm()
+        service = ServiceFilm(rep, rep_cl, valid)
+        service.add_film("1", "Se7en", "Thriller")
+        rep.filme['1'].set_nr_inchirieri(2)
+        service.add_film("2", "Zodiac", "Thriller")
+        rep.filme['2'].set_nr_inchirieri(3)
+        service.add_film("3", "Star Wars", "Science Fiction")
+        rep.filme['3'].set_nr_inchirieri(2)
+        service.add_film("4", "Die Hard", "Action")
+        rep.filme['4'].set_nr_inchirieri(3)
+        dict = service.ordonare_filme_dupa_nr_inchirieri()
+        assert list(dict.keys()) == ['4', '2', '1', '3']
+        rep.filme['3'].set_titlu("Lord of the Rings")
+        dict = service.ordonare_filme_dupa_nr_inchirieri()
+        assert list(dict.keys()) == ['4', '2', '3', '1']
+
     def teste_serice_filme(self):
         self.test_add_film()
         self.test_stergere_film()
@@ -198,3 +218,4 @@ class TesterServiceFilm:
         self.test_cautare_filme_inchiriate()
         self.test_cele_mai_inchiriate_filme()
         self.test_generare_filme_random()
+        self.test_ordonare_filme_dupa_nr_inchirieri()

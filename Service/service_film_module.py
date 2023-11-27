@@ -144,7 +144,7 @@ class ServiceFilm:
         :return: string
         """
         return (str(self.rep.filme[i].get_id()) + " " + str(self.rep.filme[i].get_titlu()) + " "
-                + str(self.rep.filme[i].get_gen()))
+                + str(self.rep.filme[i].get_gen()) + " Nr inchirieri: " + str(self.rep.filme[i].get_nr_inchirieri()))
 
     def afisare_lista_filme(self):
         """
@@ -215,7 +215,7 @@ class ServiceFilm:
         return dict
 
     @classmethod
-    def afisare_cele_mai_inchiriate_filme(cls, dict):
+    def afisare_rapoarte_filme(cls, dict):
         """
         se afiseaza toate filmele dintr-un dictionar format din cele mai inchiriate filme
         :param dict:
@@ -250,3 +250,23 @@ class ServiceFilm:
             gen = ''.join(random.choices(string.ascii_letters, k=7))
             print(id + " " + " " + titlu + " " + gen)
             self.add_film(id, titlu, gen)
+
+    def ordonare_filme_dupa_nr_inchirieri(self):
+        lista = sorted(self.rep.filme.items(), key=lambda x: x[1].get_nr_inchirieri(), reverse=True)
+        nr_curent_inchirieri = lista[1][1].get_nr_inchirieri()
+        lista_sorted = []
+        lista_aux = []
+        for item in lista:
+            if item[1].get_nr_inchirieri() == nr_curent_inchirieri:
+                lista_aux.append(item)
+            if item[1].get_nr_inchirieri() != nr_curent_inchirieri:
+                lista_aux.sort(key=lambda x: x[1].get_titlu())
+                lista_sorted.extend(lista_aux)
+                lista_aux.clear()
+                lista_aux.append(item)
+                nr_curent_inchirieri = item[1].get_nr_inchirieri()
+        lista_aux.sort(key=lambda x: x[1].get_titlu())
+        lista_sorted.extend(lista_aux)
+        lista_aux.clear()
+        dict = {k: v for k, v in lista_sorted}
+        return dict
