@@ -8,9 +8,10 @@ class ServiceFilm:
     Clasa care se ocupa cu cerintele date pe lista de filme
     """
 
-    def __init__(self, repo, repo_client, validator):
+    def __init__(self, repo, repo_client, repo_inc_retr, validator):
         self.rep = repo
         self.rep_client = repo_client
+        self.rep_inc_retr = repo_inc_retr
         self.validator = validator
 
     @classmethod
@@ -26,13 +27,8 @@ class ServiceFilm:
         titlu = string_despartit[1]
         gen = string_despartit[2]
         nr_fl_inchiriate = int(string_despartit[3])
-        inchiriat = string_despartit[4]
         fl = Film(id, titlu, gen)
         fl.set_nr_inchirieri(nr_fl_inchiriate)
-        if inchiriat == "True":
-            fl.set_inchiriat(True)
-        elif inchiriat == "False":
-            fl.set_inchiriat(False)
 
         return fl
 
@@ -61,8 +57,7 @@ class ServiceFilm:
         """
         return (self.rep.filme[i].get_id() + "-" + self.rep.filme[i].get_titlu()
                 + "-" + self.rep.filme[i].get_gen()
-                + "-" + str(self.rep.filme[i].get_nr_inchirieri())
-                + "-" + str(self.rep.filme[i].get_inchiriat()))
+                + "-" + str(self.rep.filme[i].get_nr_inchirieri()))
 
     def load_from_repository_film_to_file(self):
         """
@@ -109,33 +104,6 @@ class ServiceFilm:
             self.rep.modifica_gen_film(id, modificator)
         else:
             raise ValueError("Optiunea data nu este valida")
-
-    def inchiriere_film(self, id, id_client):
-        """
-        Functie care se ocupa cu inchirierea unui film
-        raise ValueError daca nu exista film cu id-ul dat sau daca filmul este inchiriat deja
-                              nu exista un client cu id-ul dat
-        """
-        if id_client not in self.rep_client.clienti:
-            raise IndexError("Nu exista un client cu acest id!")
-        if id not in self.rep.filme:
-            raise IndexError("Nu exista un film cu acest id!")
-        if self.rep.filme[id].get_inchiriat() is True:
-            raise ValueError("Filmul este inchiriat deja!")
-        self.rep.filme[id].set_inchiriat(True)
-        self.rep.filme[id].creste_nr_inchirieri()
-        self.rep_client.clienti[id_client].creste_nr_filme_inchiriate()
-
-    def returnare_film(self, id):
-        """
-        Functie care se ocupa cu returnarea unui film
-        raise ValueError daca nu exista un film cu id-ul dat sau daca filmul nu este inchiriat
-        """
-        if id not in self.rep.filme:
-            raise IndexError("Nu exista un film cu acest id!")
-        if self.rep.filme[id].get_inchiriat() is False:
-            raise ValueError("Filmul nu este inchiriat!")
-        self.rep.filme[id].set_inchiriat(False)
 
     def afisare_film(self, i):
         """
@@ -199,7 +167,7 @@ class ServiceFilm:
         """
         dict = {}
         for i in self.rep.filme:
-            if self.rep.filme[i].get_inchiriat() is False:
+            if self.rep_inc_retr.verificare_status_film(i) is False:
                 dict[i] = self.rep.filme[i]
         return dict
 
@@ -210,7 +178,7 @@ class ServiceFilm:
         """
         dict = {}
         for i in self.rep.filme:
-            if self.rep.filme[i].get_inchiriat() is True:
+            if self.rep_inc_retr.verificare_status_film(i) is True:
                 dict[i] = self.rep.filme[i]
         return dict
 

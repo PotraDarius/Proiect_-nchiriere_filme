@@ -5,6 +5,9 @@ from Service.service_client_module import ServiceClient
 from Repository.repository_film_module import RepositoryFilm
 from Validator.validator_film_module import ValidatorFilm
 from Service.service_film_module import ServiceFilm
+from Repository.repository_inchiriere_returnare_module import RepositoryInchiriereReturnare
+from Validator.validator_inchiriere_returnare_module import ValidatorInchiriereReturnare
+from Service.service_inchiriere_returnare_module import ServiceInchirereReturnare
 
 class TesterServiceClient:
     """
@@ -112,11 +115,15 @@ class TesterServiceClient:
         service = ServiceClient(rep, val)
         rep_fl = RepositoryFilm()
         val_fl = ValidatorFilm()
-        service_fl = ServiceFilm(rep_fl, rep,  val_fl)
+
+        rep_inc_retr = RepositoryInchiriereReturnare()
+        val_inc_retr = ValidatorInchiriereReturnare(rep, rep_fl, rep_inc_retr)
+        service_inc_retr = ServiceInchirereReturnare(rep_inc_retr, val_inc_retr, rep, rep_fl)
+        service_fl = ServiceFilm(rep_fl, rep, rep_inc_retr, val_fl)
         service.add_client("1", "Potra", "Darius")
         service.add_client("2", "Bucur", "Victor")
         service_fl.add_film("1", "Seyen", "Thriller")
-        service_fl.inchiriere_film("1", 2)
+        service_inc_retr.inchiriere(2, "1")
         dict = service.ordonare_clienti_dupa_nr_filme_inchiriate()
         assert list(dict.keys()) == [2, 1]
 

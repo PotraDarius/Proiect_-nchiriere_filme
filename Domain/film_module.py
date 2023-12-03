@@ -15,7 +15,7 @@ class Film:
         self.__titlu = titlu
         self.__gen = gen
         self.__nr_inchirieri = 0
-        self.__inchiriat = False
+        #self.__inchiriat = False
 
     def get_id(self):
         return self.__id
@@ -31,12 +31,13 @@ class Film:
 
     def set_gen(self, gen):
         self.__gen = gen
-
+    '''
     def get_inchiriat(self):
         return self.__inchiriat
-
+    
     def set_inchiriat(self, bool_value):
         self.__inchiriat = bool_value
+    '''
 
     def set_nr_inchirieri(self, nr):
         self.__nr_inchirieri = nr

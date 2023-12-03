@@ -3,12 +3,11 @@ class UI:
     Clasa ce va defini o interfata
 
     """
-    def __init__(self, sv_client, sv_film, validator_UI):
+    def __init__(self, sv_client, sv_film, sv_inc_retr, validator_UI):
         self.service_client = sv_client
         self.service_film = sv_film
+        self.service_inchiriere_returnare = sv_inc_retr
         self.validator = validator_UI
-        self.UI_client = 0
-        self.UI_film = 0
 
     def alegere_optiune(self):
         p = input("Dati o optiune: ")
@@ -167,12 +166,12 @@ class UI:
     def meniu_inchiriere(self):
         id_client = int(input("Dati id-ul clientului ce va inchiria filmul: "))
         id = input("Dati id-ul filmului ce doriti sa il inchiriati: ")
-        self.service_film.inchiriere_film(id, id_client)
+        self.service_inchiriere_returnare.inchiriere(id_client, id)
         print("Inchiriere reusita!")
 
     def meniu_returnare(self):
         id = input("Dati id-ul filmului ce doriti sa il returnati: ")
-        self.service_film.returnare_film(id)
+        self.service_inchiriere_returnare.returnare(id)
         print("Returnare reusita!")
 
     def meniu_rapoarte(self):
@@ -274,3 +273,16 @@ class UI:
                 self.meniu_generare_random()
             elif p == 12:
                 break
+
+    def alegere_stocare_date(self):
+        while True:
+            print("De unde doriti sa luati datele/sa pastrati datele?")
+            print("1.In memorie")
+            print("2.Din fisiere text")
+            p = self.alegere_optiune()
+            if p <= 2:
+                break
+            else:
+                print("Alegerea data nu este valida!")
+        return p
+
