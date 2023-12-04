@@ -174,6 +174,9 @@ class UI:
         self.service_inchiriere_returnare.returnare(id)
         print("Returnare reusita!")
 
+    def meniu_inchirieri(self):
+        self.service_inchiriere_returnare.afisare_lista_inchirieri()
+
     def meniu_rapoarte(self):
         while True:
             print("1.Afisare clienti cu filme inchiriate ordonati dupa nume")
@@ -240,13 +243,14 @@ class UI:
             print("3.Modifica film/client")
             print("4.Afisare lista clienti")
             print("5.Afisare lista filme")
-            print("6.Cautare clienti")
-            print("7.Cautare filme")
-            print("8.Inchiriere film")
-            print("9.Returnare film")
-            print("10.Rapoarte")
-            print("11.Generare random de filme")
-            print("12.Iesire")
+            print("6.Afisare lista inchirieri")
+            print("7.Cautare clienti")
+            print("8.Cautare filme")
+            print("9.Inchiriere film")
+            print("10.Returnare film")
+            print("11.Rapoarte")
+            print("12.Generare random de filme")
+            print("13.Iesire")
             p = self.alegere_optiune()
 
             if p == 1:
@@ -260,18 +264,20 @@ class UI:
             elif p == 5:
                 self.service_film.afisare_lista_filme()
             elif p == 6:
-                self.meniu_cautare_clienti()
+                self.meniu_inchirieri()
             elif p == 7:
-                self.meniu_cautare_filme()
+                self.meniu_cautare_clienti()
             elif p == 8:
-                self.meniu_inchiriere()
+                self.meniu_cautare_filme()
             elif p == 9:
-                self.meniu_returnare()
+                self.meniu_inchiriere()
             elif p == 10:
-                self.meniu_rapoarte()
+                self.meniu_returnare()
             elif p == 11:
-                self.meniu_generare_random()
+                self.meniu_rapoarte()
             elif p == 12:
+                self.meniu_generare_random()
+            elif p == 13:
                 break
 
     def alegere_stocare_date(self):

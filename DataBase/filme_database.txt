@@ -1,4 +1,5 @@
-1-Se7en-Thriller-2
-2-Zodiac-Thriller-4
-3-Star Wars-Science Fiction-2
-4-Die Hard-Action-3
+1,Se7en,Thriller,2
+2,Zodiac,Thriller,4
+3,Star Wars,Science Fiction,2
+4,Die Hard,Action,3
+5,Jack Reacher,Action,0

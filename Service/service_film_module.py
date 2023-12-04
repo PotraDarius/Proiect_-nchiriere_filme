@@ -22,7 +22,7 @@ class ServiceFilm:
         :return: fl - Film()
         :raise: ValueError daca string este gol
         """
-        string_despartit = string.split('-')
+        string_despartit = string.split(',')
         id = string_despartit[0]
         titlu = string_despartit[1]
         gen = string_despartit[2]
@@ -38,16 +38,16 @@ class ServiceFilm:
         :return:
         """
         file_path = './DataBase/filme_database.txt'
-        file = open(file_path, "r")
-        for line in file:
-            line = line.rstrip('\n')
-            if line == "":
-                continue
-            cl = self.creare_din_fisier_film(line)
-            if self.validator is not None:
-                self.validator.validare_film(cl)
-            self.rep.store_film(cl)
-        file.close()
+        with open(file_path, "r") as file:
+            file_lines = file.readlines()
+            for line in file_lines:
+                line = line.rstrip('\n')
+                if line == "":
+                    continue
+                cl = self.creare_din_fisier_film(line)
+                if self.validator is not None:
+                    self.validator.validare_film(cl)
+                self.rep.store_film(cl)
 
     def load_film(self, i):
         """
@@ -55,9 +55,9 @@ class ServiceFilm:
         :param i: dict.key
         :return: string
         """
-        return (self.rep.filme[i].get_id() + "-" + self.rep.filme[i].get_titlu()
-                + "-" + self.rep.filme[i].get_gen()
-                + "-" + str(self.rep.filme[i].get_nr_inchirieri()))
+        return (self.rep.filme[i].get_id() + "," + self.rep.filme[i].get_titlu()
+                + "," + self.rep.filme[i].get_gen()
+                + "," + str(self.rep.filme[i].get_nr_inchirieri()))
 
     def load_from_repository_film_to_file(self):
         """
@@ -65,11 +65,10 @@ class ServiceFilm:
         :return:
         """
         file_path = './DataBase/filme_database.txt'
-        file = open(file_path, "w")
-        for i in self.rep.filme:
-            string = self.load_film(i)
-            file.write(string + '\n')
-        file.close()
+        with open(file_path, "w") as file:
+            for i in self.rep.filme:
+                string = self.load_film(i)
+                file.write(string + '\n')
 
     def add_film(self, id, titlu, gen):
         """
@@ -216,7 +215,6 @@ class ServiceFilm:
             id = ''.join(random.choices(string.digits, k=2))
             titlu = ''.join(random.choices(string.ascii_letters, k=10))
             gen = ''.join(random.choices(string.ascii_letters, k=7))
-            print(id + " " + " " + titlu + " " + gen)
             self.add_film(id, titlu, gen)
 
     def ordonare_filme_dupa_nr_inchirieri(self):

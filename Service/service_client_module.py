@@ -16,7 +16,7 @@ class ServiceClient:
         :param string:
         :return: cl: Client
         """
-        string_despartit = string.split('-')
+        string_despartit = string.split('/')
         id = int(string_despartit[0])
         nume = string_despartit[1]
         prenume = string_despartit[2]
@@ -31,16 +31,16 @@ class ServiceClient:
         :return:
         """
         file_path = './DataBase/clienti_database.txt'
-        file = open(file_path, "r")
-        for line in file:
-            line = line.rstrip('\n')
-            if line == "":
-                continue
-            cl = self.creare_din_string_client(line)
-            if self.validator is not None:
-                self.validator.validare_client(cl)
-            self.rep.store_client(cl)
-        file.close()
+        with open(file_path, "r") as file:
+            file_lines = file.readlines()
+            for line in file_lines:
+                line = line.rstrip('\n')
+                if line == "":
+                    continue
+                cl = self.creare_din_string_client(line)
+                if self.validator is not None:
+                    self.validator.validare_client(cl)
+                self.rep.store_client(cl)
 
     def load_client(self, i):
         """
@@ -48,9 +48,9 @@ class ServiceClient:
         :param i: dict.key
         :return: string
         """
-        return (str(self.rep.clienti[i].get_id()) + "-" + self.rep.clienti[i].get_nume()
-                + "-" + self.rep.clienti[i].get_prenume()
-                + "-" + str(self.rep.clienti[i].get_nr_filme_inchiriate()))
+        return (str(self.rep.clienti[i].get_id()) + "/" + self.rep.clienti[i].get_nume()
+                + "/" + self.rep.clienti[i].get_prenume()
+                + "/" + str(self.rep.clienti[i].get_nr_filme_inchiriate()))
 
     def load_from_repository_client_to_file(self):
         """
@@ -58,11 +58,10 @@ class ServiceClient:
         :return:
         """
         file_path = './DataBase/clienti_database.txt'
-        file = open(file_path, "w")
-        for i in self.rep.clienti:
-            string = self.load_client(i)
-            file.write(string + '\n')
-        file.close()
+        with open(file_path, "w") as file:
+            for i in self.rep.clienti:
+                string = self.load_client(i)
+                file.write(string + '\n')
 
     def add_client(self, id, nume, prenume):
         """
@@ -192,7 +191,6 @@ class ServiceClient:
             id = int(''.join(random.choices(string.digits, k=2)))
             titlu = ''.join(random.choices(string.ascii_letters, k=10))
             gen = ''.join(random.choices(string.ascii_letters, k=7))
-            print(str(id) + " " + " " + titlu + " " + gen)
             self.add_client(id, titlu, gen)
 
     def primii_30lasuta_clienti_cu_filme_inchiriate(self):
