@@ -124,16 +124,18 @@ class ServiceFilm:
             string = self.afisare_film(i)
             print(string)
 
-    @classmethod
-    def afisare_rezultat_cautare_filme(cls, dict):
+    def afisare_rezultat_cautare_filme(self, dict, lista):
         """
         se afiseaza fiecare element dintr-un dictionar creat din rezultatul unei cautari pe lista de filme
         :param dict:
         :return:
         """
-        for i in dict:
-            string = dict[i].get_id() + " " + dict[i].get_titlu() + " " + dict[i].get_gen()
+        if lista:
+            string = dict[lista[0]].get_id() + " " + dict[lista[0]].get_titlu() + " " + dict[lista[0]].get_gen()
             print(string)
+            self.afisare_rezultat_cautare_filme(dict, lista[1:])
+        else:
+            return
 
     def cautare_filme_dupa_titlu(self, titlu):
         """

@@ -115,14 +115,16 @@ class UI:
                 if dict == {}:
                     print("Nu s-a gasit niciun client cu acest nume!")
                 else:
-                    self.service_client.afisare_rezultat_cautare_clienti(dict)
+                    lista_id_clienti = list(dict.keys())
+                    self.service_client.afisare_rezultat_cautare_clienti(dict, lista_id_clienti)
             elif p == 2:
                 prenume = input("Dati prenumele dupa care vreti sa cautati clienti: ")
                 dict = self.service_client.cautare_clienti_dupa_prenume(prenume)
                 if dict == {}:
                     print("Nu s-a gasit niciun client cu acest prenume!")
                 else:
-                    self.service_client.afisare_rezultat_cautare_clienti(dict)
+                    lista_id_clienti = list(dict.keys())
+                    self.service_client.afisare_rezultat_cautare_clienti(dict, lista_id_clienti)
             elif p == 3:
                 break
 
@@ -140,26 +142,30 @@ class UI:
                 if dict == {}:
                     print("Nu s-a gasit un film cu titlul dat!")
                 else:
-                    self.service_film.afisare_rezultat_cautare_filme(dict)
+                    lista_id_filme = list(dict.keys())
+                    self.service_film.afisare_rezultat_cautare_filme(dict, lista_id_filme)
             elif p == 2:
                 gen = input("Dati genul dupa care vreti sa cautati filme: ")
                 dict = self.service_film.cautare_filme_dupa_gen(gen)
                 if dict == {}:
                     print("Nu s-a gasit un film cu genul dat!")
                 else:
-                    self.service_film.afisare_rezultat_cautare_filme(dict)
+                    lista_id_filme = list(dict.keys())
+                    self.service_film.afisare_rezultat_cautare_filme(dict, lista_id_filme)
             elif p == 3:
                 dict = self.service_film.cautare_filme_de_inchiriat()
                 if dict == {}:
                     print("Toate filmele sunt inchiriate!")
                 else:
-                    self.service_film.afisare_rezultat_cautare_filme(dict)
+                    lista_id_filme = list(dict.keys())
+                    self.service_film.afisare_rezultat_cautare_filme(dict, lista_id_filme)
             elif p == 4:
                 dict = self.service_film.cautare_filme_inchiriate()
                 if dict == {}:
                     print("Nu exista film ce este inchiriat!")
                 else:
-                    self.service_film.afisare_rezultat_cautare_filme(dict)
+                    lista_id_filme = list(dict.keys())
+                    self.service_film.afisare_rezultat_cautare_filme(dict, lista_id_filme)
             elif p == 5:
                 break
 
