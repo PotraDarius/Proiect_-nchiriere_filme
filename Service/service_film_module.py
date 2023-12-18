@@ -219,21 +219,57 @@ class ServiceFilm:
             gen = ''.join(random.choices(string.ascii_letters, k=7))
             self.add_film(id, titlu, gen)
 
+    @classmethod
+    def __bingo_sort(cls, lista, reverse=False, key=lambda x: x[1].get_nr_inchirieri()):
+        if not lista:
+            return lista
+        bingo = key(lista[0])
+        max_val = key(lista[0])
+        for i in range(1, len(lista)):
+            if key(lista[i]) < bingo:
+                bingo = key(lista[i])
+            if key(lista[i]) > max_val:
+                max_val = key(lista[i])
+
+        urm_bingo = max_val
+        urm_pos = 0
+        while bingo < urm_bingo:
+            start_pos = urm_pos
+
+            for i in range(start_pos, len(lista)):
+                if key(lista[i]) == bingo:
+                    lista[i], lista[urm_pos] = lista[urm_pos], lista[i]
+                    urm_pos += 1
+                elif key(lista[i]) < urm_bingo:
+                    urm_bingo = key(lista[i])
+
+            bingo = urm_bingo
+            urm_bingo = max_val
+
+        return lista if reverse is False else lista[::-1]
+
+    def __bingo_sort_filme(self, filme, reverse=False, key=lambda x: x[1].get_nr_inchirieri()):
+        items = list(filme.items())
+        sorted_items = self.__bingo_sort(items, reverse, key)
+        return dict(sorted_items)
+
     def ordonare_filme_dupa_nr_inchirieri(self):
-        lista = sorted(self.rep.filme.items(), key=lambda x: x[1].get_nr_inchirieri(), reverse=True)
+        dict = self.__bingo_sort_filme(self.rep.filme, True, key=lambda x: x[1].get_nr_inchirieri())
+        lista = list(dict.items())
         nr_curent_inchirieri = lista[1][1].get_nr_inchirieri()
         lista_sorted = []
         lista_aux = []
+
         for item in lista:
             if item[1].get_nr_inchirieri() == nr_curent_inchirieri:
                 lista_aux.append(item)
             if item[1].get_nr_inchirieri() != nr_curent_inchirieri:
-                lista_aux.sort(key=lambda x: x[1].get_titlu())
+                lista_aux = self.__bingo_sort(lista_aux, key=lambda x: x[1].get_titlu())
                 lista_sorted.extend(lista_aux)
                 lista_aux.clear()
                 lista_aux.append(item)
                 nr_curent_inchirieri = item[1].get_nr_inchirieri()
-        lista_aux.sort(key=lambda x: x[1].get_titlu())
+        lista_aux = self.__bingo_sort(lista_aux, key=lambda x: x[1].get_titlu())
         lista_sorted.extend(lista_aux)
         lista_aux.clear()
         dict = {k: v for k, v in lista_sorted}

@@ -130,7 +130,8 @@ class ServiceClient:
         :return:
         """
         if lista:
-            string = (str(dict[lista[0]].get_id()) + " " + dict[lista[0]].get_nume() + " " + dict[lista[0]].get_prenume()
+            string = (str(dict[lista[0]].get_id()) + " " + dict[lista[0]].get_nume() + " " + dict[
+                lista[0]].get_prenume()
                       + " Nr filme inchiriare: " + str(dict[lista[0]].get_nr_filme_inchiriate()))
             print(string)
             self.afisare_rezultat_cautare_clienti(dict, lista[1:])
@@ -174,19 +175,19 @@ class ServiceClient:
             print(string)
 
     @classmethod
-    def __merge(cls, stanga, dreapta):
+    def __merge(cls, stanga, dreapta, key):
 
         rezultat = []
         i = j = 0
 
         while i < len(stanga) and j < len(dreapta):
-            if stanga[i][1].get_nume() == dreapta[i][1].get_nume():
+            if key(stanga[i]) == key(dreapta[i]):
                 rezultat.append(stanga[i])
                 rezultat.append(dreapta[j])
                 i += 1
                 j += 1
                 continue
-            if stanga[i][1].get_nume() < dreapta[i][1].get_nume():
+            if key(stanga[i]) < key(dreapta[i]):
                 rezultat.append(stanga[i])
                 i += 1
             else:
@@ -201,18 +202,20 @@ class ServiceClient:
             j += 1
         return rezultat
 
-    def __merge_sort(self, lista):
+    def __merge_sort(self, lista, key):
         if len(lista) <= 1:
             return lista
         mid = len(lista) // 2
 
-        parte_stanga = self.__merge_sort(lista[:mid])
-        parte_dreapta = self.__merge_sort(lista[mid:])
-        return self.__merge(parte_stanga, parte_dreapta)
+        parte_stanga = self.__merge_sort(lista[:mid], key)
+        parte_dreapta = self.__merge_sort(lista[mid:], key)
+        return self.__merge(parte_stanga, parte_dreapta, key)
 
-    def __merge_sort_clienti(self, clienti):
+    def __merge_sort_clienti(self, clienti, reverse, key):
         lista_clienti = list(clienti.items())
-        lista_clienti_sorted = self.__merge_sort(lista_clienti)
+        lista_clienti_sorted = self.__merge_sort(lista_clienti, key)
+        if reverse is True:
+            lista_clienti_sorted.reverse()
         return dict(lista_clienti_sorted)
 
     def ordonare_clienti_dupa_nume(self):
@@ -220,21 +223,25 @@ class ServiceClient:
         Ordoneaza toti clientii dupa nume intr-o lista auxiliara si este returnata
         :return: ordonate_dict: dicitionary
         """
-        ordonate = self.__merge_sort_clienti(self.rep.clienti)
+        ordonate = self.__merge_sort_clienti(self.rep.clienti, False, key=lambda x: x[1].get_nume())
         # ordonate = sorted(self.rep.clienti.items(), key=lambda x: x[1].get_nume())
         ordonate_dict = dict(ordonate)
         return ordonate
 
     @classmethod
-    def __bingo_sort(cls, lista):
-
-        bingo = lista[0][1].get_nr_filme_inchiriate()
-        max_val = lista[0][1].get_nr_filme_inchiriate()
+    def __bingo_sort(cls, lista, reverse=False, key=lambda x: x[1].get_nr_filme_inchiriate(), cmp=lambda x, y: x < y):
+        if not lista:
+            return lista
+        bingo = key(lista[0])
+        max_val = key(lista[0])
         for i in range(1, len(lista)):
-            if lista[i][1].get_nr_filme_inchiriate() < bingo:
-                bingo = lista[i][1].get_nr_filme_inchiriate()
-            if lista[i][1].get_nr_filme_inchiriate() > max_val:
-                max_val = lista[i][1].get_nr_filme_inchiriate()
+            if cmp(key(lista[i]), bingo) == 1:
+                bingo = key(lista[i])
+            if cmp(key(lista[i]), max_val) == -1:
+                max_val = key(lista[i])
+
+        if cmp == (lambda x, y: x > y):
+            bingo, max_val = max_val, bingo
 
         urm_bingo = max_val
         urm_pos = 0
@@ -242,19 +249,20 @@ class ServiceClient:
             start_pos = urm_pos
 
             for i in range(start_pos, len(lista)):
-                if lista[i][1].get_nr_filme_inchiriate() == bingo:
+                if key(lista[i]) == bingo:
                     lista[i], lista[urm_pos] = lista[urm_pos], lista[i]
                     urm_pos += 1
-                elif lista[i][1].get_nr_filme_inchiriate() < urm_bingo:
-                    urm_bingo = lista[i][1].get_nr_filme_inchiriate()
+                elif key(lista[i]) < urm_bingo:
+                    urm_bingo = key(lista[i])
 
             bingo = urm_bingo
+            urm_bingo = max_val
 
-        return lista[::-1]
+        return lista if reverse is False else lista[::-1]
 
-    def __bingo_sort_clienti(self, clienti):
+    def __bingo_sort_clienti(self, clienti, reverse, key):
         items = list(clienti.items())
-        sorted_items = self.__bingo_sort(items)
+        sorted_items = self.__bingo_sort(items, reverse, key)
         return dict(sorted_items)
 
     def ordonare_clienti_dupa_nr_filme_inchiriate(self):
@@ -262,11 +270,27 @@ class ServiceClient:
         Ordoneaza toti clientii dupa numarul de filme inchiriate intr-o lista auxiliara si este returnata
         :return: ordonate_dict: dicitionary
         """
-        # ordonate = sorted(self.rep.clienti.items(), key=lambda x: x[1].get_nr_filme_inchiriate(), reverse=True)
-        ordonate_dict = (
-            self.__bingo_sort_clienti(self.rep.clienti))
-        # ordonate_dict = {k: v for k, v in ordonate}
-        return ordonate_dict
+        dict = (
+            self.__bingo_sort_clienti(self.rep.clienti, True, key=lambda x: x[1].get_nr_filme_inchiriate()))
+        lista = list(dict.items())
+        nr_curent_fl_inchirieriate = lista[1][1].get_nr_filme_inchiriate()
+        lista_sorted = []
+        lista_aux = []
+
+        for item in lista:
+            if item[1].get_nr_filme_inchiriate() == nr_curent_fl_inchirieriate:
+                lista_aux.append(item)
+            if item[1].get_nr_filme_inchiriate() != nr_curent_fl_inchirieriate:
+                lista_aux = self.__bingo_sort(lista_aux, key=lambda x: x[1].get_nume())
+                lista_sorted.extend(lista_aux)
+                lista_aux.clear()
+                lista_aux.append(item)
+                nr_curent_fl_inchirieriate = item[1].get_nr_filme_inchiriate()
+        lista_aux = self.__bingo_sort(lista_aux, key=lambda x: x[1].get_nume())
+        lista_sorted.extend(lista_aux)
+        lista_aux.clear()
+        dict = {k: v for k, v in lista_sorted}
+        return dict
 
     def generare_random_clienti(self, x):
         for i in range(0, x):
